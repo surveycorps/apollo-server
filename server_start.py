@@ -1,9 +1,10 @@
 from flask import Flask, request, Response
-import Adafruit_BBIO.PWM as PWM 
+import Adafruit_BBIO.PWM as PWM
 import MotorCommand as M
 
 led_pin = "P9_14"
-PWM.start(led_pin, 0) 
+PWM.start(led_pin, 0)
+
 
 app = Flask(__name__)
 
@@ -13,18 +14,19 @@ def hello():
 
 @app.route("/test/", methods=['POST'])
 def test():
-    print("got something")
-
     # Grab JSON file
     content = request.get_json(force=True)
-    angle = content['angle']
-    magnitude = content['mag']
-    
-    print("Sending Angle: %d, Mag: %d" % (angle,magnitude))
 
-    motor_state = M.joystick_to_motors(angle, magnitude)
-    M.send_motor_command(motor_state)
+    js_angle = content['joystick_angle']
+    js_mag = content['joystick_mag']
+    left, right, left_dir, right_dir = M.joystick_to_motors(js_angle, js_mag)
 
+    shell = content['slider_mag']
+    shell_dir = content['slider_dir']
+
+    M.send_motor_command(left, right, shell, left_dir, right_dir, shell_dir)
+
+    print("Sending Angle: %d, Mag: %d" % (js_angle, js_mag))
     return "Thanks for all the data!"
 
 if __name__ == "__main__":
@@ -32,4 +34,4 @@ if __name__ == "__main__":
 
     # Initialize the nRF24 radio peripheral
     M.init_radio()
-    
+

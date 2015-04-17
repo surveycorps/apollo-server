@@ -1,4 +1,5 @@
 import math
+
 def joystick_to_motors(angle, magnitude, quadrant=None):
     angle = float(angle)
     # if (quadrant == 1 or quadrant == 2):
@@ -22,7 +23,7 @@ def joystick_to_motors(angle, magnitude, quadrant=None):
     k_left = 0
     k_right = 0
 
-    
+
     if (quadrant == 1):
         theta = (angle*(10.0/9))
         k_left = 1
@@ -35,12 +36,12 @@ def joystick_to_motors(angle, magnitude, quadrant=None):
         dir_right = 0
 
     elif (quarant == 3):
-        theta = (angle+180)*(10.0/9)  
-        k_right = 1 
+        theta = (angle+180)*(10.0/9)
+        k_right = 1
         dir_left = 1
         dir_right = 1
     elif (quadrant == 4):
-        theta = (angle-90)*(10.0/9) 
+        theta = (angle-90)*(10.0/9)
         k_left = 1
         dir_left = 1
         dir_right = 1
@@ -57,7 +58,7 @@ def joystick_to_motors(angle, magnitude, quadrant=None):
     return [motor_left, motor_right, dir_left, dir_right]
 
 def init_radio():
-    from nrf24 import NRF24 
+    from nrf24 import NRF24
     import time
 
     pipes = [ [0xe7, 0xe7, 0xe7, 0xe7, 0xe7], [0xc2, 0xc2, 0xc2, 0xc2, 0xc2] ]
@@ -75,24 +76,14 @@ def init_radio():
     radio.openWritingPipe(pipes[1])
     radio.openReadingPipe(1,pipes[0])
 
-def send_motor_command(motor_left, motor_right=None, dir_left=None,
-dir_right=None):
+def send_motor_command(motor_left, motor_right, motor_shell, dir_left,
+dir_right, dir_shell):
     # Check if the user passed an array containing the values, instead of the
     # values themselves. Note: The correct style is to use variable length
     # arguments
 
-    if (motor_right is None and len(motor_left) == 4):
-        motor_right = motor_left[1]
-        dir_left = motor_left[2]
-        dir_right = motor_left[3]
-        motor_left = motor_left[0]
-    elif (len(motor_left) != 4):
-        raise ValueError('Expected 4 arguments, or a list containing 4
-        arguments')
-
-    buffer = [chr(motor_left), chr(motor_right), chr(dir_left << 1 |
-    dir_right)]
-
+    buffer = [chr(motor_left), chr(motor_right), chr(motor_shell),
+              chr(dir_left << 2 | dir_right << 1 | dir_shell)]
     radio.write(buffer)
-    
-     
+
+
