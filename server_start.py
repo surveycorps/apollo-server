@@ -1,4 +1,4 @@
-from flask import Flask, request, Response
+from flask import Flask, request, jsonify
 import Adafruit_BBIO.PWM as PWM
 import MotorCommand as M
 
@@ -8,9 +8,13 @@ PWM.start(led_pin, 0)
 
 app = Flask(__name__)
 
+
 @app.route("/")
 def hello():
     return "Hello World!"
+
+@app.route("/start/", methods=['GET'])
+def start():
 
 @app.route("/test/", methods=['POST'])
 def test():
@@ -29,9 +33,14 @@ def test():
     print("Sending Angle: %d, Mag: %d" % (js_angle, js_mag))
     return "Thanks for all the data!"
 
+
+@app.route("/status/", methods=['GET'])
+def status():
+    # Get Status Here
+    return jsonify(status='OKAY')
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
 
     # Initialize the nRF24 radio peripheral
     M.init_radio()
-
