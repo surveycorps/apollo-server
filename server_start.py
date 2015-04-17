@@ -30,8 +30,9 @@ def test():
 
     M.send_motor_command(left, right, shell, left_dir, right_dir, shell_dir)
 
-    print("Sending Angle: %d, Mag: %d" % (js_angle, js_mag))
-    return "Thanks for all the data!"
+    print("Angle: %d, Mag: %d, Shell: %d, Dir: %d" % (js_angle, js_mag,
+                                                      shell, shell_dir))
+    return jsonify(power="50")
 
 
 @app.route("/status/", methods=['GET'])
