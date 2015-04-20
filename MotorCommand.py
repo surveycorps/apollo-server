@@ -17,8 +17,7 @@ def joystick_to_motors(angle, magnitude, quadrant=None):
         elif (angle < 0 and angle >= -90): quadrant = 2
         elif (angle < -90 and angle >= -180): quadrant = 3
         elif (angle <= 180 and angle >= 90): quadrant = 4
-        else: raise ValueError("Angle should be within the range [0, 180] and
-        [0, -180]")
+        else: raise ValueError("Angle should be within the range [0, 180] and [0, -180]")
 
     k_left = 0
     k_right = 0

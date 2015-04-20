@@ -11,10 +11,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def hello():
-    return "Hello World!"
-
-@app.route("/start/", methods=['GET'])
-def start():
+    return "Hello World! My name is APRo."
 
 @app.route("/test/", methods=['POST'])
 def test():
